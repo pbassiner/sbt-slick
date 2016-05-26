@@ -19,6 +19,7 @@ object SlickCodeGenPlugin extends AutoPlugin {
     slickPackage := "models",
     slickDatabases := Nil,
     slickMakeDbPackage := identity,
+    slickSourceCodeGenerator := "slick.codegen.SourceCodeGenerator",
     slickGenTables := {
       val cp = (dependencyClasspath in Compile).value
       val r = (runner in Compile).value
@@ -32,12 +33,17 @@ object SlickCodeGenPlugin extends AutoPlugin {
       val rootPackage = slickPackage.value
       val dbs = slickDatabases.value
 
+//      val sourceCodeGen = slickSourceCodeGenerator.value match {
+//        case Some(s) => s
+//        case None => "slick.codegen.SourceCodeGenerator"
+//      }
+
       val files = if (dbs.isEmpty) {
         log.warn("Trying to run slick code generation on no database")
         val fname = (sourceManaged in Compile).value / rootPackage.replaceAll("\\.", "/") / "Tables.scala"
         if (!fname.exists) {
           toError(
-            r.run("slick.codegen.SourceCodeGenerator", cp.files, Array(
+            r.run(slickSourceCodeGenerator.value, cp.files, Array(
               driver, jdbc, url(None), outputDir, rootPackage
             ), log)
           )
@@ -52,7 +58,7 @@ object SlickCodeGenPlugin extends AutoPlugin {
           val fname = (sourceManaged in Compile).value / dbPackage.replaceAll("\\.", "/") / "Tables.scala"
           if (!fname.exists) {
             toError(
-              r.run("slick.codegen.SourceCodeGenerator", cp.files, Array(
+              r.run(slickSourceCodeGenerator.value, cp.files, Array(
                 driver, jdbc, url(Some(database)), outputDir, dbPackage
               ), log)
             )

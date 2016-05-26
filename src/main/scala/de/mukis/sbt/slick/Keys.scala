@@ -26,5 +26,6 @@ trait Keys {
   val slickDatabases = SettingKey[Seq[String]]("slick-databases", "databases to generate tables for")
   val slickPackage = SettingKey[String]("slick-package", "Output package for Tables.scala")
   val slickMakeDbPackage = SettingKey[MakePackage]("slick-db-package", "Call for each database to generate the package name")
+  val slickSourceCodeGenerator = SettingKey[String]("slick-source-code-generator", "Source code generator class, e.g. 'slick.codegen.SourceCodeGenerator'")
   val slickGenTables = TaskKey[Seq[File]]("slick-gen-tables", "Task to generate the table")
 }
